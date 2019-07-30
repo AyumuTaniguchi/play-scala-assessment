@@ -1,2 +1,4 @@
 sbt
 exit
+sbt
+exit
