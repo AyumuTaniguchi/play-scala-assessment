@@ -1,14 +1,11 @@
 # --- !Ups
-create table people (
-    id int auto_increment primary key,
-    name varchar(255) not null,
-    mail varchar(255) not null,
-    tel varchar(255)
+create table comments(
+  id  int auto_increment primary key,
+  content varchar(255) not null,
+  contributor_name varchar(255) not null
 );
-insert into people values (default, 'taro', 'taro@yamada', '999-999');
-insert into people values (default, 'hanako', 'hanako@flower', '888-888');
-insert into people values (default, 'sachiko', 'sachiko@happy', '777-777');
 
+insert into comments values (default, 'test_content', 'test_contributor_name');
 
 # --- !Downs
-drop table people
+drop table if exists comments;
