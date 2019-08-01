@@ -1,0 +1,11 @@
+@(message:String, form:Form[CommentForm.Data])(implicit request: MessagesRequestHeader)
+
+@main("Add Comment") {
+    <p>@message</p>
+        @helper.form(action=routes.HomeController.create()) {
+        @helper.CSRF.formField
+        @helper.inputText(form("content"))
+        @helper.inputText(form("contributor_name"))
+        <button>Create Comment</button>
+    }
+}
