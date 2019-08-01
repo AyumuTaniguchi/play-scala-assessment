@@ -17,9 +17,9 @@ class HomeController @Inject()(db: Database, cc: MessagesControllerComponents)
     try {
       db.withConnection { conn =>
         val stmt = conn.createStatement
-        val rs = stmt.executeQuery("SELECT * from people")
+        val rs = stmt.executeQuery("SELECT * from comments")
         while (rs.next) {
-          msg += "<li>" + rs.getInt("id") + ":" + rs.getString("name") + "</li>"
+          msg += "<li>" + rs.getString("content") + "</li>"
         }
         msg += "</ul>"
       }
