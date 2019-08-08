@@ -1,5 +1,10 @@
-@(message:String)
+@(message:String, result:List[CommentForm.CommentData] )
 
 @main("Index Page") {
     <p>@Html(message)</p>
+    <ul>
+        @for(item<-result){
+            <li>@item.contributor_name: @item.content</li>
+        }
+    </ul>
 }

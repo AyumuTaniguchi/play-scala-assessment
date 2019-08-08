@@ -10,28 +10,19 @@ import play.api.db._
 
 import CommentForm._
 
+import anorm._
+
 @Singleton
 class HomeController @Inject()(db: Database, cc: MessagesControllerComponents)
     extends MessagesAbstractController(cc) {
 
   def index() = Action {implicit request =>
-    var msg = "database record:<br><ul>"
-    try {
-      db.withConnection { conn =>
-        val stmt = conn.createStatement
-        val rs = stmt.executeQuery("SELECT * from comments")
-        while (rs.next) {
-          msg += "<li>" + rs.getString("content") + "</li>"
-        }
-        msg += "</ul>"
-      }
-    } catch {
-      case e:SQLException =>
-        msg = "<li>no record...</li>"
+    db.withConnection { implicit conn =>
+      val result:List[CommentData] = SQL("Select * from comments").as(commentparser.*)
+      Ok(views.html.index(
+        "Comment Data.", result
+      ))
     }
-    Ok(views.html.index(
-      msg
-    ))
   }
 
   def add() = Action {implicit request =>
@@ -44,21 +35,13 @@ class HomeController @Inject()(db: Database, cc: MessagesControllerComponents)
   def create() = Action { implicit request =>
     val formdata = form.bindFromRequest
     val data = formdata.get
-    try
-      db.withConnection { conn =>
-        val ps = conn.prepareStatement(
-          "insert into comments values (default, ?, ?)")
-        ps.setString(1, data.content)
-        ps.setString(2, data.contributor_name)
-        ps.executeUpdate
-      }
-    catch {
-      case e: SQLException =>
-        Ok(views.html.add(
-          "フォームに入力して下さい。",
-          form
-        ))
+    db.withConnection { implicit conn =>
+      SQL("insert into comments values (default, {content}, {contributor_name})")
+        .on(
+          "content" -> data.content,
+          "contributor_name" -> data.contributor_name
+        ).executeInsert()
+      Redirect(routes.HomeController.index)
     }
-    Redirect(routes.HomeController.index)
   }
 }
