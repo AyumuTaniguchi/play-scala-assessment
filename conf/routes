@@ -4,10 +4,11 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET   /   controllers.HomeController.index()
+GET   /   controllers.CommentController.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET   /add   controllers.HomeController.add()
-POST   /create   controllers.HomeController.create()
+
+GET   /add   controllers.CommentController.add()
+POST   /   controllers.CommentController.create()

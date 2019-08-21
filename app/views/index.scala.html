@@ -1,5 +1,11 @@
-@(message:String)
+@(message:String, data:Seq[models.Comment])(implicit request: MessagesRequestHeader)
 
-@main("Index Page") {
+
+@main("Hello") {
     <p>@Html(message)</p>
+    <ul>
+        @for(item<-data){
+            <li>@item.id</li>
+        }
+    </ul>
 }
